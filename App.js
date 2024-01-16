@@ -9,6 +9,7 @@ import {
 	Manrope_400Regular,
 	useFonts,
 } from "@expo-google-fonts/manrope";
+import ProductDetailScreen from "./screens/ProductDetailScreen";
 
 export default function App() {
 	let [fontsLoaded, fontError] = useFonts({
@@ -28,6 +29,7 @@ export default function App() {
 			<View style={styles.rootScreen}>
 				<SafeAreaView style={styles.rootScreen}>
 					<HomeScreen />
+					{/* <ProductDetailScreen/> */}
 				</SafeAreaView>
 			</View>
 		</>

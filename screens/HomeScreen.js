@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+	FlatList,
+	ScrollView,
+	StyleSheet,
+	Text,
+	TextInput,
+	View,
+} from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
@@ -59,19 +66,21 @@ export default function HomeScreen() {
 				</View>
 
 				<View>
-					<ScrollView>
-						<View style={styles.productListContainer}>
-							{productList.map((item, index) => (
-                                
+				
+					<View style={styles.productListContainer}>
+						<FlatList
+							data={productList}
+							renderItem={({ item }) => (
 								<ProductThumbnail
 									title={item.title}
 									price={item.price}
 									thumbnail={item.thumbnail}
-									key={index}
 								/>
-							))}
-						</View>
-					</ScrollView>
+							)}
+							keyExtractor={(item) => item.id}
+							numColumns={2}
+						/>
+					</View>
 				</View>
 			</View>
 		</View>
@@ -102,8 +111,8 @@ const styles = StyleSheet.create({
 		fontSize: 22,
 	},
 	mainContainer: {
-        flex:1,
-    },
+		flex: 1,
+	},
 
 	searchContainer: {
 		flexDirection: "row",
@@ -156,10 +165,10 @@ const styles = StyleSheet.create({
 	},
 
 	productListContainer: {
-		flexDirection: "row",
-		flexWrap: "wrap",
+		
+		
 		// gap: 10,
 		padding: 10,
-        justifyContent:"space-between"
+		justifyContent: "space-between",
 	},
 });
