@@ -13,8 +13,22 @@ import { EvilIcons } from "@expo/vector-icons";
 import OfferCard from "../components/OfferCardSlider";
 import ProductThumbnail from "../components/ProductThumbnail";
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
 	const [productList, setProductList] = useState([]);
+
+    function renderItem({ item }) {
+        function pressHandler(){
+            navigation.navigate("ProductDetails", {title:item.title, price:item.price, thumbnail:item.thumbnail, rating: item.rating, images:item.images, discount: item.discountPercentage, description:item.description })
+        }
+		
+				return (<ProductThumbnail
+					title={item.title}
+					price={item.price}
+					thumbnail={item.thumbnail}
+					onPress={pressHandler}
+				/>)
+		
+		}
 
 	useEffect(() => {
 		fetch("https://dummyjson.com/products")
@@ -70,15 +84,10 @@ export default function HomeScreen() {
 					<View style={styles.productListContainer}>
 						<FlatList
 							data={productList}
-							renderItem={({ item }) => (
-								<ProductThumbnail
-									title={item.title}
-									price={item.price}
-									thumbnail={item.thumbnail}
-								/>
-							)}
+							renderItem={renderItem}
 							keyExtractor={(item) => item.id}
 							numColumns={2}
+                            showsVerticalScrollIndicator={false}
 						/>
 					</View>
 				</View>

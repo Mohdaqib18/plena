@@ -1,27 +1,29 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-export default function ProductThumbnail({ title, price, thumbnail }) {
+export default function ProductThumbnail({ title, price, thumbnail,onPress }) {
 	return (
 		<View style={styles.thumbnailContainer}>
-			<View>
-				<Ionicons
-					name="heart-outline"
-					size={24}
-					color="black"
-					style={styles.heart}
-				/>
-				<Image src={thumbnail} style={styles.productImage} />
-			</View>
-			<View style={styles.productInfoContainer}>
+			<Pressable onPress={onPress}>
 				<View>
-					<Text style={styles.priceText}>${price}</Text>
-					<Text style={styles.nameText}>
-						{title.split(" ").slice(0, 2).join(" ")}
-					</Text>
+					<Ionicons
+						name="heart-outline"
+						size={24}
+						color="black"
+						style={styles.heart}
+					/>
+					<Image source={{uri:thumbnail}} style={styles.productImage} />
 				</View>
+				<View style={styles.productInfoContainer}>
+					<View>
+						<Text style={styles.priceText}>${price}</Text>
+						<Text style={styles.nameText}>
+							{title.split(" ").slice(0, 2).join(" ")}
+						</Text>
+					</View>
 
-				<Ionicons name="add-circle" size={24} color="#2A4BA0" />
-			</View>
+					<Ionicons name="add-circle" size={24} color="#2A4BA0" />
+				</View>
+			</Pressable>
 		</View>
 	);
 }
@@ -34,7 +36,8 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: "black",
 		padding: 2,
-		margin:7
+		margin:7,
+	
 	},
 
 	productImage: {

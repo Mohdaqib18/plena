@@ -7,9 +7,14 @@ import {
 	Manrope_800ExtraBold,
 	Manrope_300Light,
 	Manrope_400Regular,
+	Manrope_700Bold,
 	useFonts,
 } from "@expo-google-fonts/manrope";
 import ProductDetailScreen from "./screens/ProductDetailScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
 	let [fontsLoaded, fontError] = useFonts({
@@ -18,6 +23,7 @@ export default function App() {
 		Manrope_800ExtraBold,
 		Manrope_300Light,
 		Manrope_400Regular,
+		Manrope_700Bold,
 	});
 
 	if (!fontsLoaded && !fontError) {
@@ -26,12 +32,36 @@ export default function App() {
 	return (
 		<>
 			<StatusBar style="light" />
-			<View style={styles.rootScreen}>
-				<SafeAreaView style={styles.rootScreen}>
-					<HomeScreen />
-					{/* <ProductDetailScreen/> */}
-				</SafeAreaView>
-			</View>
+			<NavigationContainer>
+				<View style={styles.rootScreen}>
+					<SafeAreaView style={styles.rootScreen}>
+						<Stack.Navigator
+						screenOptions={{
+							headerShown: false,
+							contentStyle:{
+								backgroundColor:"white"
+							}
+							
+						}}
+						// initialRouteName="ProductDetails"
+						>
+							<Stack.Screen
+								name="Home"
+								component={HomeScreen}
+								options={{
+									headerStyle: {
+										backgroundColor: "#2A4BA0",
+									},
+								}}
+							/>
+							<Stack.Screen
+								name="ProductDetails"
+								component={ProductDetailScreen}
+							/>
+						</Stack.Navigator>
+					</SafeAreaView>
+				</View>
+			</NavigationContainer>
 		</>
 	);
 }
