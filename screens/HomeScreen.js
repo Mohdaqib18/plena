@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
 	FlatList,
+	Pressable,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -13,22 +14,37 @@ import { EvilIcons } from "@expo/vector-icons";
 import OfferCard from "../components/OfferCardSlider";
 import ProductThumbnail from "../components/ProductThumbnail";
 
-export default function HomeScreen({navigation}) {
+export default function HomeScreen({ navigation }) {
 	const [productList, setProductList] = useState([]);
 
-    function renderItem({ item }) {
-        function pressHandler(){
-            navigation.navigate("ProductDetails", {title:item.title, price:item.price, thumbnail:item.thumbnail, rating: item.rating, images:item.images, discount: item.discountPercentage, description:item.description })
-        }
-		
-				return (<ProductThumbnail
-					title={item.title}
-					price={item.price}
-					thumbnail={item.thumbnail}
-					onPress={pressHandler}
-				/>)
-		
+	function goToCart() {
+		navigation.navigate("ShoppingCart");
+	}
+
+	function renderItem({ item }) {
+		function pressHandler() {
+			navigation.navigate("ProductDetails", {
+				title: item.title,
+				price: item.price,
+				thumbnail: item.thumbnail,
+				rating: item.rating,
+				images: item.images,
+				discount: item.discountPercentage,
+				description: item.description,
+				id:item.id,
+				item:item
+			});
 		}
+
+		return (
+			<ProductThumbnail
+				title={item.title}
+				price={item.price}
+				thumbnail={item.thumbnail}
+				onItemPress={pressHandler}
+			/>
+		);
+	}
 
 	useEffect(() => {
 		fetch("https://dummyjson.com/products")
@@ -41,7 +57,9 @@ export default function HomeScreen({navigation}) {
 			<View style={styles.headerContainer}>
 				<View style={styles.welcomeContainer}>
 					<Text style={styles.welcomeText}>Hi, Aqib</Text>
-					<SimpleLineIcons name="handbag" size={24} color="white" />
+					<Pressable onPress={goToCart}>
+						<SimpleLineIcons name="handbag" size={24} color="white" />
+					</Pressable>
 				</View>
 				<View style={styles.searchContainer}>
 					<AntDesign
@@ -80,14 +98,13 @@ export default function HomeScreen({navigation}) {
 				</View>
 
 				<View>
-				
 					<View style={styles.productListContainer}>
 						<FlatList
 							data={productList}
 							renderItem={renderItem}
 							keyExtractor={(item) => item.id}
 							numColumns={2}
-                            showsVerticalScrollIndicator={false}
+							showsVerticalScrollIndicator={false}
 						/>
 					</View>
 				</View>
@@ -174,8 +191,6 @@ const styles = StyleSheet.create({
 	},
 
 	productListContainer: {
-		
-		
 		// gap: 10,
 		padding: 10,
 		justifyContent: "space-between",

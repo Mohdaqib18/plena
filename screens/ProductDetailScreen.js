@@ -1,13 +1,39 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, ToastAndroid, View } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import Carousel from "../components/Carousel";
+import { useDispatch, useSelector } from "react-redux";
+import { addCartItem, removeCartItem } from "../store/redux/cartItems";
 
 export default function ProductDetailScreen({ navigation, route }) {
+	const cartItemIds = useSelector((state) => state.cartItems.ids);
+	const dispatch = useDispatch();
+
+	const cartItemAdded = cartItemIds.map(item => item?.id).includes(route?.params?.id);
+
+    
+
 	function backButtonHandler() {
 		navigation.goBack();
 	}
 
+	function goToCart() {
+		navigation.navigate("ShoppingCart");
+	}
+
+	function addToCart() {
+		if (cartItemAdded) {
+				ToastAndroid.showWithGravity(
+					"Item Already Added",
+					ToastAndroid.SHORT,
+					ToastAndroid.BOTTOM
+				);
+				console.log(cartItemIds);
+		} else {
+			dispatch(addCartItem({ id: route?.params?.item }));
+			console.log(cartItemIds);
+		}
+	}
 	return (
 		<View>
 			<View style={styles.navbar}>
@@ -18,7 +44,9 @@ export default function ProductDetailScreen({ navigation, route }) {
 						color="black"
 					/>
 				</Pressable>
-				<SimpleLineIcons name="handbag" size={24} color="black" />
+				<Pressable onPress={goToCart}>
+					<SimpleLineIcons name="handbag" size={24} color="black" />
+				</Pressable>
 			</View>
 
 			<View>
@@ -43,16 +71,16 @@ export default function ProductDetailScreen({ navigation, route }) {
 			</View>
 
 			<View style={styles.buttonContainer}>
-				<View style={styles.addButton}>
-					<Pressable>
+				<Pressable onPress={addToCart}>
+					<View style={styles.addButton}>
 						<Text style={styles.addButtonText}>Add To Cart</Text>
-					</Pressable>
-				</View>
-				<View style={styles.buyButton}>
-					<Pressable>
+					</View>
+				</Pressable>
+				<Pressable onPress={goToCart}>
+					<View style={styles.buyButton}>
 						<Text style={styles.buyButtonText}>Buy Now</Text>
-					</Pressable>
-				</View>
+					</View>
+				</Pressable>
 			</View>
 
 			<View style={styles.descriptionContainer}>
@@ -169,10 +197,6 @@ const styles = StyleSheet.create({
 	},
 	detailsTextContainer: {
 		marginBottom: 6,
-
-	
 	},
-	descriptionTextContainer: {
-		
-	},
+	descriptionTextContainer: {},
 });

@@ -1,9 +1,9 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-export default function ProductThumbnail({ title, price, thumbnail,onPress }) {
+export default function ProductThumbnail({ title, price, thumbnail, onItemPress }) {
 	return (
 		<View style={styles.thumbnailContainer}>
-			<Pressable onPress={onPress}>
+			<Pressable onPress={onItemPress}>
 				<View>
 					<Ionicons
 						name="heart-outline"
@@ -11,7 +11,7 @@ export default function ProductThumbnail({ title, price, thumbnail,onPress }) {
 						color="black"
 						style={styles.heart}
 					/>
-					<Image source={{uri:thumbnail}} style={styles.productImage} />
+					<Image source={{ uri: thumbnail }} style={styles.productImage} />
 				</View>
 				<View style={styles.productInfoContainer}>
 					<View>
@@ -20,8 +20,11 @@ export default function ProductThumbnail({ title, price, thumbnail,onPress }) {
 							{title.split(" ").slice(0, 2).join(" ")}
 						</Text>
 					</View>
-
-					<Ionicons name="add-circle" size={24} color="#2A4BA0" />
+					<View>
+						<Pressable>
+							<Ionicons name="add-circle" size={29} color="#2A4BA0" />
+						</Pressable>
+					</View>
 				</View>
 			</Pressable>
 		</View>

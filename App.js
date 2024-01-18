@@ -13,6 +13,9 @@ import {
 import ProductDetailScreen from "./screens/ProductDetailScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import ShoppingCartScreen from "./screens/ShoppingCartScreen";
+import { Provider } from "react-redux";
+import { store } from "./store/redux/store";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,36 +35,33 @@ export default function App() {
 	return (
 		<>
 			<StatusBar style="light" />
-			<NavigationContainer>
-				<View style={styles.rootScreen}>
-					<SafeAreaView style={styles.rootScreen}>
-						<Stack.Navigator
-						screenOptions={{
-							headerShown: false,
-							contentStyle:{
-								backgroundColor:"white"
-							}
-							
-						}}
-						// initialRouteName="ProductDetails"
-						>
-							<Stack.Screen
-								name="Home"
-								component={HomeScreen}
-								options={{
-									headerStyle: {
-										backgroundColor: "#2A4BA0",
+			<Provider store={store}>
+				<NavigationContainer>
+					<View style={styles.rootScreen}>
+						<SafeAreaView style={styles.rootScreen}>
+							<Stack.Navigator
+								screenOptions={{
+									headerShown: false,
+									contentStyle: {
+										backgroundColor: "white",
 									},
 								}}
-							/>
-							<Stack.Screen
-								name="ProductDetails"
-								component={ProductDetailScreen}
-							/>
-						</Stack.Navigator>
-					</SafeAreaView>
-				</View>
-			</NavigationContainer>
+								// initialRouteName="ProductDetails"
+							>
+								<Stack.Screen name="Home" component={HomeScreen} />
+								<Stack.Screen
+									name="ProductDetails"
+									component={ProductDetailScreen}
+								/>
+								<Stack.Screen
+									name="ShoppingCart"
+									component={ShoppingCartScreen}
+								/>
+							</Stack.Navigator>
+						</SafeAreaView>
+					</View>
+				</NavigationContainer>
+			</Provider>
 		</>
 	);
 }
