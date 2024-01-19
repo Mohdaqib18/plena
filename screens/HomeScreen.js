@@ -6,6 +6,7 @@ import {
 	StyleSheet,
 	Text,
 	TextInput,
+	ToastAndroid,
 	View,
 } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
@@ -13,9 +14,41 @@ import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import OfferCard from "../components/OfferCardSlider";
 import ProductThumbnail from "../components/ProductThumbnail";
+import { useDispatch, useSelector } from "react-redux";
+import { addCartItem, removeCartItem } from "../store/redux/cartItems";
+import { addFavourite, removeFavourite } from "../store/redux/favorites";
 
 export default function HomeScreen({ navigation }) {
 	const [productList, setProductList] = useState([]);
+	const cartItemIds = useSelector((state) => state.cartItems.items);
+
+	const favouriteItems = useSelector((state) => state.favouriteItems.items);
+	const dispatch = useDispatch();
+
+	function changeFavoriteStatusHandler(item) {
+		const favouriteItem = favouriteItems
+			.map((item) => item?.id)
+			.includes(item.id);
+
+		if (favouriteItem) {
+			dispatch(removeFavourite({ item: item }));
+		} else {
+			dispatch(addFavourite({ item: item }));
+		}
+	}
+
+	function addToCart(item) {
+		const cartItemAdded = cartItemIds.map((item) => item?.id).includes(item.id);
+		if (cartItemAdded) {
+			ToastAndroid.showWithGravity(
+				"Item Already Added",
+				ToastAndroid.SHORT,
+				ToastAndroid.BOTTOM
+			);
+		} else {
+			dispatch(addCartItem({ item: item }));
+		}
+	}
 
 	function goToCart() {
 		navigation.navigate("ShoppingCart");
@@ -31,8 +64,8 @@ export default function HomeScreen({ navigation }) {
 				images: item.images,
 				discount: item.discountPercentage,
 				description: item.description,
-				id:item.id,
-				item:item
+				id: item.id,
+				item: item,
 			});
 		}
 
@@ -41,7 +74,10 @@ export default function HomeScreen({ navigation }) {
 				title={item.title}
 				price={item.price}
 				thumbnail={item.thumbnail}
+				item={item}
 				onItemPress={pressHandler}
+				addToCart={addToCart}
+				toggleFavStatus={changeFavoriteStatusHandler}
 			/>
 		);
 	}
@@ -93,6 +129,7 @@ export default function HomeScreen({ navigation }) {
 			</View>
 			<View style={styles.mainContainer}>
 				<OfferCard />
+
 				<View>
 					<Text style={styles.recommendedText}>Recommended</Text>
 				</View>
@@ -118,9 +155,9 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	headerContainer: {
-		height: 270,
 		alignItems: "center",
 		paddingHorizontal: 20,
+		paddingBottom: 10,
 		backgroundColor: "#2A4BA0",
 	},
 	welcomeContainer: {
@@ -136,9 +173,7 @@ const styles = StyleSheet.create({
 		color: "#F8F9FB",
 		fontSize: 22,
 	},
-	mainContainer: {
-		flex: 1,
-	},
+	mainContainer: {},
 
 	searchContainer: {
 		flexDirection: "row",
@@ -191,8 +226,8 @@ const styles = StyleSheet.create({
 	},
 
 	productListContainer: {
-		// gap: 10,
 		padding: 10,
 		justifyContent: "space-between",
+		height: 350,
 	},
 });

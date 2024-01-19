@@ -1,19 +1,16 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import CarouselItem from "./CarouselItem";
 import Pagination from "./Pagination";
 import { Ionicons } from "@expo/vector-icons";
 
 
-const Carousel = ({data}) => {
+const Carousel = ({data, heartPress, isFavouriteItem}) => {
 	return (
 		<View style={styles.carousel}>
-			<Ionicons
-				name="heart-outline"
-				size={24}
-				color="red"
-				style={styles.heart}
-			/>
+			<Pressable style={styles.heart} onPress={heartPress}>
+				<Ionicons name={isFavouriteItem ? "heart" : "heart-outline"} size={24} color="red" />
+			</Pressable>
 			<FlatList
 				data={data}
 				renderItem={({ item }) => <CarouselItem item={item} />}

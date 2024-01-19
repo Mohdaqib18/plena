@@ -1,16 +1,38 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-export default function ProductThumbnail({ title, price, thumbnail, onItemPress }) {
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addFavourite, removeFavourite } from "../store/redux/favorites";
+export default function ProductThumbnail({
+	title,
+	price,
+	thumbnail,
+	onItemPress,
+	addToCart,
+	item,
+	toggleFavStatus,
+
+}) {
+	const [heartIconToggle,setHeartIconToggle] = useState(false);
+
+
+  function  handleHeartIconClick(){
+    toggleFavStatus(item),
+	setHeartIconToggle(prev => !prev)
+  }
+
 	return (
 		<View style={styles.thumbnailContainer}>
 			<Pressable onPress={onItemPress}>
 				<View>
-					<Ionicons
-						name="heart-outline"
-						size={24}
-						color="black"
-						style={styles.heart}
-					/>
+					<Pressable onPress={handleHeartIconClick}>
+						<Ionicons
+							name={heartIconToggle?"heart":"heart-outline"}
+							size={24}
+							color="red"
+							style={styles.heart}
+						/>
+					</Pressable>
 					<Image source={{ uri: thumbnail }} style={styles.productImage} />
 				</View>
 				<View style={styles.productInfoContainer}>
@@ -21,7 +43,7 @@ export default function ProductThumbnail({ title, price, thumbnail, onItemPress 
 						</Text>
 					</View>
 					<View>
-						<Pressable>
+						<Pressable onPress={() => addToCart(item)}>
 							<Ionicons name="add-circle" size={29} color="#2A4BA0" />
 						</Pressable>
 					</View>
@@ -33,14 +55,13 @@ export default function ProductThumbnail({ title, price, thumbnail, onItemPress 
 
 const styles = StyleSheet.create({
 	thumbnailContainer: {
-		width:"45%",
+		width: "45%",
 		height: 194,
 		borderRadius: 12,
 		borderWidth: 1,
 		borderColor: "black",
 		padding: 2,
-		margin:7,
-	
+		margin: 7,
 	},
 
 	productImage: {
@@ -58,6 +79,7 @@ const styles = StyleSheet.create({
 		fontFamily: "Manrope_400Regular",
 		fontSize: 12,
 		color: "#616A7D",
+		width: 100,
 	},
 
 	priceText: {

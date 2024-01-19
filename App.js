@@ -16,8 +16,63 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ShoppingCartScreen from "./screens/ShoppingCartScreen";
 import { Provider } from "react-redux";
 import { store } from "./store/redux/store";
+import FavouriteScreen from "./screens/FavouriteScreen";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+function Tabs() {
+	return (
+		<Tab.Navigator
+			screenOptions={{
+				headerShown: false,
+
+				backgroundColor: "red",
+			}}
+		>
+			<Tab.Screen
+				name="Home"
+				component={HomeScreen}
+				options={{
+					tabBarLabel: "Home",
+					tabBarIcon: ({ color, size }) => (
+						<MaterialCommunityIcons name="home" color={color} size={size} />
+					),
+				}}
+			/>
+			<Tab.Screen
+				name="Favourites"
+				component={FavouriteScreen}
+				options={{
+					tabBarLabel: "Favourites",
+					tabBarIcon: ({ color, size }) => (
+						<MaterialCommunityIcons
+							name="cards-heart"
+							color={color}
+							size={size}
+						/>
+					),
+				}}
+			/>
+			<Tab.Screen
+				name="Cart"
+				component={ShoppingCartScreen}
+				options={{
+					
+					tabBarIcon: ({ color, size }) => (
+						<MaterialCommunityIcons
+							name="cart"
+							color={color}
+							size={size}
+						/>
+					),
+				}}
+			/>
+		</Tab.Navigator>
+	);
+}
 
 export default function App() {
 	let [fontsLoaded, fontError] = useFonts({
@@ -48,6 +103,7 @@ export default function App() {
 								}}
 								// initialRouteName="ProductDetails"
 							>
+								<Stack.Screen name="Tab" component={Tabs} />
 								<Stack.Screen name="Home" component={HomeScreen} />
 								<Stack.Screen
 									name="ProductDetails"
@@ -57,6 +113,7 @@ export default function App() {
 									name="ShoppingCart"
 									component={ShoppingCartScreen}
 								/>
+								<Stack.Screen name="Favourite" component={FavouriteScreen} />
 							</Stack.Navigator>
 						</SafeAreaView>
 					</View>

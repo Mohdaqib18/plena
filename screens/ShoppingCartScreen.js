@@ -2,16 +2,24 @@ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 import CartItem from "../components/CartItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { removeCartItem } from "../store/redux/cartItems";
 
 const ShoppingCartScreen = ({ navigation }) => {
-	const cartItemIds = useSelector((state) => state.cartItems.ids);
+	const cartItemIds = useSelector((state) => state.cartItems.items);
 	function backButtonHandler() {
 		navigation.goBack();
 	}
-   console.log(cartItemIds)
+
+	const dispatch = useDispatch();
+
+	function deleteCartItem(item) {
+		dispatch(removeCartItem({ item: item }));
+	}
+
+	const subTotal = cartItemIds.reduce((acc, item) => acc + item.price, 0);
 	return (
-		<View>
+		<View style={{ flex: 1 }}>
 			<View style={styles.navbar}>
 				<Pressable onPress={backButtonHandler}>
 					<Ionicons
@@ -21,10 +29,12 @@ const ShoppingCartScreen = ({ navigation }) => {
 					/>
 				</Pressable>
 				<View>
-					<Text style={styles.shoppingCartText}>Shopping Cart(5)</Text>
+					<Text style={styles.shoppingCartText}>
+						Shopping Cart({cartItemIds.length})
+					</Text>
 				</View>
 			</View>
-			<View>
+			<View style={{ flex: 1 }}>
 				<FlatList
 					data={cartItemIds}
 					renderItem={({ item }) => (
@@ -32,9 +42,10 @@ const ShoppingCartScreen = ({ navigation }) => {
 							image={item.thumbnail}
 							price={item.price}
 							title={item.title}
+							deleteCartItem={deleteCartItem}
+							item={item}
 						/>
 					)}
-
 					key={(item) => item.id}
 				/>
 			</View>
@@ -42,7 +53,7 @@ const ShoppingCartScreen = ({ navigation }) => {
 				<View style={styles.priceBreakupContainer}>
 					<View style={styles.cartAmountInfoContainer}>
 						<Text style={styles.regularText}>Subtotal</Text>
-						<Text style={styles.mediumText}>$35.96</Text>
+						<Text style={styles.mediumText}>${subTotal}</Text>
 					</View>
 					<View style={styles.cartAmountInfoContainer}>
 						<Text style={styles.regularText}>Delivery</Text>
@@ -50,7 +61,7 @@ const ShoppingCartScreen = ({ navigation }) => {
 					</View>
 					<View style={styles.cartAmountInfoContainer}>
 						<Text style={styles.regularText}>Total</Text>
-						<Text style={styles.mediumText}>$37.96</Text>
+						<Text style={styles.mediumText}>${subTotal + 2}</Text>
 					</View>
 				</View>
 				<View style={styles.buttonContainer}>

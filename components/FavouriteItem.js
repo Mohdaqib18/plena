@@ -1,21 +1,8 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
-const CartItem = ({ image, title, price, deleteCartItem, item }) => {
-	const [quantity, setQuantity] = useState(1);
 
-	const totalPrice = price * quantity;
+const FavouriteItem = ({ image, title, price }) => {
 
-	function increaseQuantity() {
-		setQuantity((prev) => prev + 1);
-		
-	}
-	function decreaseQuantity() {
-		setQuantity((prev) => prev - 1);
-		if (quantity === 1) {
-			deleteCartItem(item);
-		}
-	}
+
 	return (
 		<View style={styles.cartItemContainer}>
 			<View style={styles.cartItemInfoContainer}>
@@ -24,24 +11,20 @@ const CartItem = ({ image, title, price, deleteCartItem, item }) => {
 					<Text style={styles.itemName}>
 						{title?.split(" ").slice(0, 1).join(" ")}
 					</Text>
-					<Text style={styles.itemPrice}>${totalPrice}</Text>
+					<Text style={styles.itemPrice}>${price}</Text>
 				</View>
 			</View>
 
 			<View style={styles.cartItemQuantityContainer}>
-				<Pressable onPress={decreaseQuantity}>
-					<Ionicons name="remove-circle-outline" size={40} color="black" />
-				</Pressable>
-				<Text style={styles.quantityText}>{quantity}</Text>
-				<Pressable onPress={increaseQuantity}>
-					<Ionicons name="add-circle-outline" size={40} color="black" />
-				</Pressable>
+				
+				<Text style={styles.quantityText}>${price}</Text>
+		
 			</View>
 		</View>
 	);
 };
 
-export default CartItem;
+export default FavouriteItem;
 
 const styles = StyleSheet.create({
 	cartItemContainer: {

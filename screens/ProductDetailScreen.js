@@ -4,13 +4,27 @@ import { Ionicons } from "@expo/vector-icons";
 import Carousel from "../components/Carousel";
 import { useDispatch, useSelector } from "react-redux";
 import { addCartItem, removeCartItem } from "../store/redux/cartItems";
+import { addFavourite, removeFavourite } from "../store/redux/favorites";
 
 export default function ProductDetailScreen({ navigation, route }) {
-	const cartItemIds = useSelector((state) => state.cartItems.ids);
+	const cartItemIds = useSelector((state) => state.cartItems.items);
+	const favouriteItems = useSelector((state) => state.favouriteItems.items);
+  
+	
 	const dispatch = useDispatch();
 
 	const cartItemAdded = cartItemIds.map(item => item?.id).includes(route?.params?.id);
+	const favouriteItem = favouriteItems.map(item => item?.id).includes(route?.params?.id);
+  
+	function changeFavoriteStatusHandler(){
+		if(favouriteItem){
+			dispatch(removeFavourite({ item: route.params.item }));
 
+		}else{
+			dispatch(addFavourite({item: route.params.item}))
+			navigation.navigate("Favourite")
+		}
+	}
     
 
 	function backButtonHandler() {
@@ -28,12 +42,14 @@ export default function ProductDetailScreen({ navigation, route }) {
 					ToastAndroid.SHORT,
 					ToastAndroid.BOTTOM
 				);
-				console.log(cartItemIds);
+				
 		} else {
-			dispatch(addCartItem({ id: route?.params?.item }));
-			console.log(cartItemIds);
+			dispatch(addCartItem({item : route?.params?.item}));
+			
 		}
 	}
+
+		
 	return (
 		<View>
 			<View style={styles.navbar}>
@@ -60,7 +76,7 @@ export default function ProductDetailScreen({ navigation, route }) {
 			</View>
 
 			<View>
-				<Carousel data={route.params.images} />
+				<Carousel data={route.params.images} heartPress={changeFavoriteStatusHandler} isFavouriteItem ={favouriteItem}/>
 			</View>
 
 			<View style={styles.priceInfoContainer}>
